@@ -270,13 +270,15 @@ def case_info_logic(type=True, **kwargs):
 
         request_data = test.get('request').pop('request_data')
         data_type = test.get('request').pop('type')
-        if request_data and data_type:
+        if request_data!={} and data_type:   # 修改if request_data and data_type 为if request_data != {} and data_type 兼容type=json且数据为False情况
             if data_type == 'json':
                 test.get('request').setdefault(data_type, request_data)
             else:
                 data_dict = key_value_dict('data', **request_data)
                 if not isinstance(data_dict, dict):
                     return data_dict
+                if len(data_dict)==1 and list(data_dict.values())[0] == "FilesOnly":# 新增data中x-FilesOnly时候吃，存入data:"x"
+                    data_dict = str(list(data_dict.keys())[0])
                 test.get('request').setdefault(data_type, data_dict)
 
         headers = test.get('request').pop('headers')
@@ -507,7 +509,6 @@ def get_ajax_msg(msg, success):
 
 def register_info_logic(**kwargs):
     """
-
     :param kwargs:
     :return:
     """

@@ -20,7 +20,7 @@
     <script src="https://cdn.bootcss.com/bootstrap-fileinput/4.4.8/js/fileinput.min.js"></script>
     <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap-fileinput/4.4.8/css/fileinput.min.css"/>
 
-    <link rel="stylesheet" href="http://cdn.amazeui.org/amazeui/2.7.2/css/amazeui.min.css"/>
+    <link rel="stylesheet" href="http://cdn.clouddeep.cn/amazeui/1.0.1/css/amazeui.min.css"/>
     <link rel="stylesheet" href="{% static 'assets/css/admin.css' %}">
     <link rel="stylesheet" href="{% static 'assets/css/common.css' %}">
 
@@ -131,7 +131,7 @@
             <h3 class="am-icon-gears"><em></em> <a href="#">系统设置</a></h3>
             <ul>
                 <li><a href="/api/env_list/1/">运 行 环 境</a></li>
-                <li><a href="http://192.168.91.45:5555/dashboard">任 务 监 控</a></li>
+                <li><a href="http://192.168.1.196:5555/dashboard">任 务 监 控</a></li>
               {% comment %}  <li><a href="/api/echo/">实验室</a></li>{% endcomment %}
             </ul>
         </div>
@@ -168,6 +168,12 @@
                 <button type="button" class="am-btn am-btn-default am-radius am-btn-xs"
                         onclick="location='/api/add_config/'">新增配置<a
                         href="/api/add_config/" class="am-close am-close-spin">~</a>
+                </button>
+            </li>
+            <li>
+                <button type="button" class="am-btn am-btn-default am-radius am-btn-xs"
+                        onclick="location='/api/config_list/1/'">配置列表<a
+                        href="/api/config_list/1/" class="am-close am-close-spin">~</a>
                 </button>
             </li>
             <li>

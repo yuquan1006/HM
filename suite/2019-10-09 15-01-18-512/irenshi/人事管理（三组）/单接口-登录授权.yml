@@ -1,0 +1,15 @@
+-   config:
+        name: "\u5355\u63A5\u53E3-\u767B\u5F55\u6388\u6743"
+        request:
+            base_url: https://www.ihr360.com
+-   test:
+        extract:
+        -   cookie_token: req_headers.cookie
+        name: "\u5355\u63A5\u53E3-\u767B\u5F55\u6388\u6743"
+        request:
+            method: GET
+            url: $redirectUrl
+        validate:
+        -   check: status_code
+            comparator: equals
+            expected: 200

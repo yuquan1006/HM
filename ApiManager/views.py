@@ -20,7 +20,7 @@ from ApiManager.utils.common import module_info_logic, project_info_logic, case_
     init_filter_session, get_total_values, timestamp_to_datetime
 from ApiManager.utils.operation import env_data_logic, del_module_data, del_project_data, del_test_data, copy_test_data, \
     del_report_data, add_suite_data, copy_suite_data, del_suite_data, edit_suite_data, add_test_reports
-from ApiManager.utils.pagination import get_pager_info
+from ApiManager.utils.pagination import get_pager_info,get_referenced_idList
 from ApiManager.utils.runner import run_by_batch, run_test_by_type
 from ApiManager.utils.task_opt import delete_task, change_task_status
 from ApiManager.utils.testcase import get_time_stamp
@@ -370,9 +370,12 @@ def test_list(request, id):
         filter_query = set_filter_session(request)
         test_list = get_pager_info(
             TestCaseInfo, filter_query, '/api/test_list/', id)
+        # 获取被引用用例id列表
+        referenced_idList = get_referenced_idList(TestCaseInfo)
         manage_info = {
             'account': account,
             'test': test_list[1],
+            'id_list': referenced_idList, # 新增被引用list
             'page_list': test_list[0],
             'info': filter_query,
             'env': EnvInfo.objects.all().order_by('-create_time'),
@@ -430,6 +433,12 @@ def edit_case(request, id=None):
     test_info = TestCaseInfo.objects.get_case_by_id(id)
     request = eval(test_info[0].request)
     include = eval(test_info[0].include)
+    # 新增判断data数据为字符串时候，改成字典{"x":"FilesOnly"}显示在前端页面
+    if request['test']['request'].get('data'):
+        tmp_str = request['test']['request']['data']
+        if isinstance(tmp_str, str):
+            request['test']['request'].pop('data')
+            request['test']['request']['data'] = {tmp_str:'FilesOnly'} 
     manage_info = {
         'account': account,
         'info': test_info[0],

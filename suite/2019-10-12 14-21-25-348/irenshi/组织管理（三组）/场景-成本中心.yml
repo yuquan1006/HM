@@ -1,0 +1,129 @@
+-   config:
+        name: "\u573A\u666F-\u6210\u672C\u4E2D\u5FC3"
+        request:
+            base_url: https://www.ihr360.com
+        variables:
+        -   accountName: '17612163057'
+        -   password: '111111'
+        -   randomData: ${gen_random_string()}
+-   test:
+        extract:
+        -   message: content.message
+        -   redirectUrl: content.redirectUrl
+        name: "\u5355\u63A5\u53E3-B\u7AEF\u767B\u5F55"
+        request:
+            json:
+                accountName: $accountName
+                loginType: PASSWORD
+                mobilePrefix: CHINA
+                password: $password
+                target: ''
+                verifyCode: null
+            method: POST
+            url: https://account.ihr360.com/ac/login
+        validate:
+        -   check: $message
+            comparator: equals
+            expected: "\u8BA4\u8BC1\u767B\u5F55\u6210\u529F"
+        variables:
+        -   accountName: '17612163057'
+        -   password: '111111'
+-   test:
+        extract:
+        -   cookie_token: req_headers.cookie
+        name: "\u5355\u63A5\u53E3-B\u7AEF\u767B\u5F55\u6388\u6743"
+        request:
+            method: GET
+            url: $redirectUrl
+        validate:
+        -   check: status_code
+            comparator: equals
+            expected: 200
+-   test:
+        extract:
+        -   costCenterId: content.data.content.0.id
+        -   costName: content.data.content.0.costName
+        -   costCode: content.data.content.0.costCode
+        name: "\u5355\u63A5\u53E3-\u3010\u6210\u672C\u4E2D\u5FC3\u3011\u83B7\u53D6\
+            \u5217\u8868"
+        request:
+            headers:
+                X-XSRF-TOKEN: ${getHeadersToken($cookie_token)}
+            json:
+                page: 1
+                queryParam:
+                    isValid: null
+                    likeCostName: ''
+                rows: 10
+            method: POST
+            url: /web/gateway/organization/api/costCenter/pageData
+-   test:
+        extract:
+        -   check: content.result
+        name: "\u5355\u63A5\u53E3-\u3010\u6210\u672C\u4E2D\u5FC3\u3011\u65B0\u589E"
+        request:
+            headers:
+                X-XSRF-TOKEN: ${getHeadersToken($cookie_token)}
+            json:
+                costCode: 59667$randomData
+                costName: "\u6210\u90FD\u9879\u76EE$randomData"
+                id: ''
+                inputMode: false
+                isValid: true
+            method: POST
+            url: /web/gateway/organization/api/costCenter/addOrUpdateCostCenter
+        validate:
+        -   check: $check
+            comparator: equals
+            expected: true
+-   test:
+        extract:
+        -   costCenterId: content.data.content.0.id
+        -   costName: content.data.content.0.costName
+        -   costCode: content.data.content.0.costCode
+        name: "\u5355\u63A5\u53E3-\u3010\u6210\u672C\u4E2D\u5FC3\u3011\u83B7\u53D6\
+            \u5217\u8868"
+        request:
+            headers:
+                X-XSRF-TOKEN: ${getHeadersToken($cookie_token)}
+            json:
+                page: 1
+                queryParam:
+                    isValid: null
+                    likeCostName: ''
+                rows: 10
+            method: POST
+            url: /web/gateway/organization/api/costCenter/pageData
+-   test:
+        extract:
+        -   check: content.result
+        name: "\u5355\u63A5\u53E3-\u3010\u6210\u672C\u4E2D\u5FC3\u3011\u7F16\u8F91"
+        request:
+            headers:
+                X-XSRF-TOKEN: ${getHeadersToken($cookie_token)}
+            json:
+                costCode: $costCode
+                costName: $costName
+                id: $costCenterId
+                isValid: false
+            method: POST
+            url: /web/gateway/organization/api/costCenter/addOrUpdateCostCenter
+        validate:
+        -   check: $check
+            comparator: equals
+            expected: true
+-   test:
+        extract:
+        -   check: content.result
+        name: "\u5355\u63A5\u53E3-\u3010\u6210\u672C\u4E2D\u5FC3\u3011\u5220\u9664"
+        request:
+            headers:
+                X-XSRF-TOKEN: ${getHeadersToken($cookie_token)}
+            json:
+            - $costCenterId
+            method: POST
+            url: /web/gateway/organization/api/costCenter/filteringOperation?operationType=DELETE
+        validate:
+        -   check: $check
+            comparator: equals
+            expected: true

@@ -141,6 +141,8 @@
                     <th class="table-check"><input type="checkbox" id="select_all"/></th>
                     <th class="table-title">序号</th>
                     <th class="table-type">名称</th>
+                    <th class="table-type">接口请求地址</th>
+                    <th class="table-type">是否被引用</th>
                     <th class="table-type">所属项目</th>
                     <th class="table-type">所属模块</th>
                     <th class="table-type">创建者</th>
@@ -203,6 +205,8 @@
                                 </nav>
                             </div>
                         </td>
+                        <td>{{ foo.request|convert_eval_url }}</td>
+                        <td>{{ id_list|isInclude:foo.id }}</td>
                         <td>{{ foo.belong_project }}</td>
                         <td>{{ foo.belong_module.module_name }}</td>
                         <td>{{ foo.author }}</td>
