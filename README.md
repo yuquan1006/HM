@@ -160,3 +160,110 @@ MockServer：https://github.com/yinquanwang/MockServer
 
 
 
+
+
+
+
+1.启动mysql数据库 service mysql start
+2.启动django项目   python3 manage.py runserver 0.0.0.0:8000    
+	后台启动：nohup python3 manage.py runserver 0.0.0.0:8000 >djo.out 2>&1 &   tail -f djo.out
+3.启动rabittmq-server 	  docker run -d -p 15672:15672 -p 5672:5672     -e RABBITMQ_DEFAULT_USER=user     -e RABBITMQ_DEFAULT_PASS=user123     --name ct_rabbitmq     --restart always     rabbitmq:3.7-management
+4.启动rabittmq-server-worker 
+	python3 manage.py celery -A HttpRunnerManager worker --loglevel=info    启动worker 后台启动：nohup python3 manage.py celery -A HttpRunnerManager worker --loglevel=info  >worker.out 2>&1 &
+	python3 manage.py celery beat --loglevel=info							启动定时任务监听器
+	celery flower --broker=amqp://user:user123@localhost:5672//				启动任务监控后台。
+	
+环境搭建：
+	1.首先在HttpRunnerManager的GitHub页面下载项目代码，然后存放在任意目录下。
+	2.安装mysql ：root ubuntu
+		查看有没有安装MySQL：dpkg -l | grep mysql
+		# 安装MySQL： apt install mysql-server
+		检查是否安装成功 netstat -tap | grep mysql
+		初始化数据库 mysql_secure_installation
+		检查mysql服务状态：systemctl status mysql
+		配置mysql允许远程访问，首先编辑 /etc/mysql/mysql.conf.d/mysqld.cnf 配置文件：vim /etc/mysql/mysql.conf.d/mysqld.cnf 注释掉bind-address          = 127.0.0.1
+		mysql -u root -p 授权：
+			grant all on *.* to root@'%' identified by 'ubuntu' with grant option;  flush privileges;    # 刷新权限		systemctl restart mysql 重庆mysql
+	3.在/HttpRunnerManager/HttpRunnerManager/修改settings.py文件里DATABASES字典的配置信息。配置mysql还有worker
+
+	4.RabbitMQ消息中间件，由于RabbitMQ需要erlang语言的支持，在安装RabbitMQ之前需要安装erlang，再安装RabbitMQ消息中间件。
+		sudo apt-get install erlang-nox
+		sudo apt-get update
+		sudo apt-get install rabbitmq-server
+	4.1使用docker安装更佳 ：docker run -d -p 15672:15672 -p 5672:5672     -e RABBITMQ_DEFAULT_USER=user     -e RABBITMQ_DEFAULT_PASS=user123     --name ct_rabbitmq     --restart always     rabbitmq:3.7-management
+		修改HttpRunnerManager/修改settings.py文件里的worker相关配置
+		BROKER_URL='amqp://user:user123@localhost:5672//' if DEBUG else 'amqp://user:user123@localhost:5672//'  其中user为rabittmq服务安装指定的用户名
+	
+	5.切换到/HttpRunnerManager目录，使用pip3 install -r requirements.txt命令安装工程所依赖的库文件
+	
+	6.完成上一步后，执行python3 manage.py makemigrations ApiManager和python3 manage.py migrate命令生成数据迁移脚本并应用到db生成数据表。
+	
+	7.使用python3 manage.py createsuperuser命令创建超级用户，用户后台管理数据库
+	
+	8.使用python3 manage.py runserver 0.0.0.0:8000命令启动服务，另外如果要使用定时任务，还需要使用启动worker、启动定时任务监听器、启动任务监控后台。
+	
+	9.上面的服务全部启动以后，就可以通过下面的链接来访问的HttpRunnerManager服务：
+
+    访问 http://localhost:5555/dashboard 可以查看任务列表和状态
+    访问 http://127.0.0.1:8000/api/register/ 可以注册用户，开始使用平台
+    访问 http://127.0.0.1:8000/admin/ 可以登录后台运维管理系统 admin Admin@123
+	
+	
+
+问题记录（查看linux上httprunner包位置 pip3 show httprunner）
+	1.tornado库版本==5.1.1，不然会报错
+	2.status_code,headers，cookies，content等自建变量适用于extract中喝varibales，request不适用。 目前修改httprunner/response文件117行headers规则。新增req_headers和headers
+	3.操作哪里的几个空白包括删除功能也无效  初步判断是CSS问题 ， 2.F12打开调试。看一下是哪个请求错误。我这边发现是amazeui.min.css， 这个css问题下载错误。http://cdn.clouddeep.cn/amazeui/1.0.1/css/amazeui.min.css
+然后将这个地址替换掉templates目录下base.html中对应的地址即可。 刷新页面
+	4.json数据发送单个false这种格式无法保存，解决：修改ApiManager/utils/common.py中case_info_logic函数中if request_data and data_type: 中修改and为or即可。
+	5.支持文件上传
+		a 修改httprunner中built_in.py和最新版httprunner中multipart_encoder方法，且pip安装filetype==1.0
+		b.修改common.py文件中case_info_logic函数，新增判断data数据为{"x":"FilesOnly"}时候存入data数据为“x”到数据库
+		c.修改views中edit_case函数，新增判断data数据为字符串时候，改成字典{"x":"FilesOnly"}显示在前端页面
+	6.多环境下登录接口处理
+		修改httprunner中client.py文件中_build_url函数中# 新增url判断，解决不同环境下登录接口地址不同问题。
+
+	
+	7.用例列表新增url显示
+		a.修改项目下templates下test_list.html文件在<form class="am-form am-g" id='test_list' name="test_list">下增加一个th和一个td
+		b.修改项目ApiManager\templatetags\custom_tags.py 新增convert_eval_url函数（自定义filter(过滤器):在Django模板语言中,通过使用过滤器来改变变量的显示）作用：将后台返回testcase库对象的request符串数据eval转换dict获取数据中url信息
+	8.用例列表新增是否被引用
+		a.修改项目ApiManager\templatetags\custom_tags.py 新增isInclude函数（过滤器）作用：判断用例对象id是否在被引用的id集合。存在返回Ture
+		b.ApiManager\views 导入get_referenced_idList函数，test_list函数下新增获取被引用id列表代码并将列表传入html中
+		c.修改ApiManager\utils\pagination 新增get_referenced_idList函数 作用：获取用例中被引用用例id。文件导入from django.db.models import Q # filter中不等于写法		
+		d.修改项目下templates下test_list.html文件在<form class="am-form am-g" id='test_list' name="test_list">下增加一个th(是否被引用)和一个td(布尔值),td中使用过滤器显示是否被引用结果
+	9.暂不支持用例名称中不支持 /
+		待解决
+	10.django报错invalid literal for int() with base 10: 'null‘。 原因可能是这种错误是因为模型类中某个字段的条件约束为int类型，但是给了一个字符串类型，所以报错，找到那个模型类的字段，并对应修改就好了。
+		 # 暂时未找到解决办法先/usr/local/lib/python3.5/dist-packages/django/db/models/fields/__init__.py文件get_db_prep_value函数 try。except异常处理，防止django报错invalid literal for int() with base 10: 'null‘
+
+	11.提取器value中新增支持变量($xx)来获取数据。如	content.data.content.$c.id 其中$c可以在配置中定义
+		a.修改httprunner中runner.py文件中run_test函数下 # extract下 extracted_variables_mapping = resp_obj.extract_response(extractors) - >extract下 extracted_variables_mapping = resp_obj.extract_response(extractors,context=self.context)
+		作用：在提取器中传入用例的context上下文，在后续函数中通过content获取变量值
+		b.修改httprunner中response.py文件中extract_response函数，新增默认参数context=""，将context形参传入extract_field函数中
+		  修改httprunner中response.py文件中extract_field函数，新增默认参数context=""，将context形参传入_extract_field_with_delimiter函数中
+		  修改httprunner中response.py文件中_extract_field_with_delimiter函数，新增默认参数context=""，将context形参传入# response body下utils.query_json中
+		  修改httprunner中utils文件中query_json函数新增默认参数context=""，修改处理逻辑：判断query列表中是否存在变量（import testcase 适用testcase.extract_variables()方法）。如果是变量就通过context参数的
+		  testcase_parser.get_bind_variable()方法获取变量对应值，在将值给key。
+	
+	12.去除首页百度地图API弹框提示问题
+		a.修改HttpRunnerManager/templates/index.html文件中39行百度api的js去除
+		  
+	13.报告页面显示问题，HttpRunnerManager\templates\和report_template.html中该JS无法访问 http://extentreports.com/resx/dist/js/extent.js和 xxxx.css
+		a.下载css和js到本地static下assets下js/css目录下。更新两个html文件中js和css引用(下载地址：https://github.com/anshooarora/extentreports-java/tree/master/dist)
+		b.在html加入{% load staticfiles %} 表示：加载静态资源。导入css：    <link href='{% static 'assets/css/extent.css' %}' type='text/css' rel='stylesheet'/> 导入js:   <script src="{% static 'assets/js/extent.js' %}"></script>
+	13.1.异步运行生成报告无样式问题。
+		a.异步运行调用的是extent_report_template.html模板，且jinja2(异步运行适用jinja2.templates实现将数据转化为html文件)的templates模板语法和django的的一些语法有冲突（无法识别{%load staticfile%}等语法）。故直接将extent.js和ext
+		ent.css内容写入到extent_report_template.html文件中。
+		
+	14.为空的用例支持检验断言（目前暂未提交到服务器）
+		a.修改HttpRunnerManager\ApiManager\utils\runner文件中run_by_single函数下76航，注释url不为空加入testcase_list逻辑。
+		b.修改httprunner库下client文件_build_url函数，增加判断  if path == "":return False   request函数中新增判断  if url==False:response = None return response
+	 
+	15.首页图表显示缺失：
+		原因：index.html中引用的echarts的js网址无法访问了
+		修改：注释之前的对echarts引用。改用：<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/4.3.0/echarts.min.js"></script>  （引用网址：https://cdnjs.com/libraries/echarts）
+		
+		
+
+		

@@ -1,6 +1,12 @@
+<<<<<<< HEAD
 [I 200120 14:56:34 command:139] Visit me at http://localhost:5555
 [I 200120 14:56:34 command:144] Broker: amqp://user:**@localhost:5672//
 [I 200120 14:56:34 command:147] Registered tasks: 
+=======
+[I 191023 17:21:20 command:139] Visit me at http://localhost:5555
+[I 191023 17:21:20 command:144] Broker: amqp://user:**@localhost:5672//
+[I 191023 17:21:20 command:147] Registered tasks: 
+>>>>>>> c11e39d18937551c81dc0ea169dd955054431ca1
     ['celery.backend_cleanup',
      'celery.chain',
      'celery.chord',
@@ -9,6 +15,7 @@
      'celery.group',
      'celery.map',
      'celery.starmap']
+<<<<<<< HEAD
 [I 200120 14:56:34 mixins:231] Connected to amqp://user:**@127.0.0.1:5672//
 [W 200120 14:56:38 control:44] 'stats' inspect method failed
 [W 200120 14:56:38 control:44] 'active_queues' inspect method failed
@@ -18,3 +25,14 @@
 [W 200120 14:56:38 control:44] 'reserved' inspect method failed
 [W 200120 14:56:38 control:44] 'revoked' inspect method failed
 [W 200120 14:56:38 control:44] 'conf' inspect method failed
+=======
+[I 191023 17:21:20 mixins:231] Connected to amqp://user:**@127.0.0.1:5672//
+[W 191023 17:21:23 control:44] 'stats' inspect method failed
+[W 191023 17:21:23 control:44] 'active_queues' inspect method failed
+[W 191023 17:21:23 control:44] 'registered' inspect method failed
+[W 191023 17:21:23 control:44] 'scheduled' inspect method failed
+[W 191023 17:21:23 control:44] 'active' inspect method failed
+[W 191023 17:21:23 control:44] 'reserved' inspect method failed
+[W 191023 17:21:23 control:44] 'revoked' inspect method failed
+[W 191023 17:21:23 control:44] 'conf' inspect method failed
+>>>>>>> c11e39d18937551c81dc0ea169dd955054431ca1
