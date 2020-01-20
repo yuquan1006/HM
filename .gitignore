@@ -11,3 +11,4 @@ BeautifulReport/__pycache__/
 Test Report.html
 ApiManager/templatetags/*.pyc
 *.out
+*.pid
