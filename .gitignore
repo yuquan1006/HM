@@ -13,3 +13,4 @@ Test Report.html
 ApiManager/templatetags/*.pyc
 *.out
 *.pid
+logs/
