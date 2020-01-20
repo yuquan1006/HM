@@ -2,6 +2,7 @@
 .gitignore
 .idea/
 ApiManager/__pycache__/
+datas/
 ApiManager/logic/__pycache__/
 ApiManager/migrations/__pycache__/
 HttpRunnerManager/__pycache__/
