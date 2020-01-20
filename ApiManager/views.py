@@ -3,7 +3,7 @@ import logging
 import os
 import shutil
 import sys
-
+import time
 import paramiko
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, StreamingHttpResponse
 from django.shortcuts import render_to_response
@@ -20,7 +20,7 @@ from ApiManager.utils.common import module_info_logic, project_info_logic, case_
     init_filter_session, get_total_values, timestamp_to_datetime
 from ApiManager.utils.operation import env_data_logic, del_module_data, del_project_data, del_test_data, copy_test_data, \
     del_report_data, add_suite_data, copy_suite_data, del_suite_data, edit_suite_data, add_test_reports
-from ApiManager.utils.pagination import get_pager_info
+from ApiManager.utils.pagination import get_pager_info,get_referenced_idList
 from ApiManager.utils.runner import run_by_batch, run_test_by_type
 from ApiManager.utils.task_opt import delete_task, change_task_status
 from ApiManager.utils.testcase import get_time_stamp
@@ -370,9 +370,12 @@ def test_list(request, id):
         filter_query = set_filter_session(request)
         test_list = get_pager_info(
             TestCaseInfo, filter_query, '/api/test_list/', id)
+        # 获取被引用用例id列表
+        referenced_idList = get_referenced_idList(TestCaseInfo)
         manage_info = {
             'account': account,
             'test': test_list[1],
+            'id_list': referenced_idList, # 新增被引用list
             'page_list': test_list[0],
             'info': filter_query,
             'env': EnvInfo.objects.all().order_by('-create_time'),
@@ -430,6 +433,12 @@ def edit_case(request, id=None):
     test_info = TestCaseInfo.objects.get_case_by_id(id)
     request = eval(test_info[0].request)
     include = eval(test_info[0].include)
+    # 新增判断data数据为字符串时候，改成字典{"x":"FilesOnly"}显示在前端页面
+    if request['test']['request'].get('data'):
+        tmp_str = request['test']['request']['data']
+        if isinstance(tmp_str, str):
+            request['test']['request'].pop('data')
+            request['test']['request']['data'] = {tmp_str:'FilesOnly'} 
     manage_info = {
         'account': account,
         'info': test_info[0],
@@ -506,7 +515,7 @@ def env_list(request, id):
         return render_to_response('env_list.html', manage_info)
 
 
-@login_check
+#@login_check
 def report_list(request, id):
     """
     报告列表
@@ -522,11 +531,12 @@ def report_list(request, id):
             msg = del_report_data(report_info.pop('id'))
         return HttpResponse(get_ajax_msg(msg, 'ok'))
     else:
-        filter_query = set_filter_session(request)
+        #filter_query = set_filter_session(request)
+        filter_query = {'user': '', 'name': '', 'belong_project': 'All', 'belong_module': '请选择', 'report_name': ''}
         report_list = get_pager_info(
             TestReports, filter_query, '/api/report_list/', id)
         manage_info = {
-            'account': request.session["now_account"],
+            'account': request.session.get("now_account","Test"),
             'report': report_list[1],
             'page_list': report_list[0],
             'info': filter_query
@@ -534,7 +544,7 @@ def report_list(request, id):
         return render_to_response('report_list.html', manage_info)
 
 
-@login_check
+#@login_check
 def view_report(request, id):
     """
     查看报告
@@ -649,7 +659,7 @@ def get_project_info(request):
         return HttpResponse(msg)
 
 
-@login_check
+#@login_check
 def download_report(request, id):
     if request.method == 'GET':
 
@@ -799,3 +809,6 @@ def echo(request):
             for i, line in enumerate(stdout):
                 request.websocket.send(bytes(line, encoding='utf8'))
             client.close()
+
+
+

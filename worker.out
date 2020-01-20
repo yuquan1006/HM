@@ -1,0 +1,15 @@
+/usr/local/lib/python3.5/dist-packages/celery/platforms.py:812: RuntimeWarning: You are running the worker with superuser privileges, which is
+absolutely not recommended!
+
+Please specify a different user using the -u option.
+
+User information: uid=0 euid=0 gid=0 egid=0
+
+  uid=uid, euid=euid, gid=gid, egid=egid,
+[2020-01-20 14:56:34,968: INFO/MainProcess] Connected to amqp://user:**@127.0.0.1:5672//
+[2020-01-20 14:56:34,992: INFO/MainProcess] mingle: searching for neighbors
+[2020-01-20 14:56:36,010: INFO/MainProcess] mingle: all alone
+[2020-01-20 14:56:36,037: WARNING/MainProcess] /usr/local/lib/python3.5/dist-packages/celery/fixups/django.py:265: UserWarning: Using settings.DEBUG leads to a memory leak, never use this setting in production environments!
+  warnings.warn('Using settings.DEBUG leads to a memory leak, never '
+[2020-01-20 14:56:36,037: WARNING/MainProcess] celery@damon-server ready.
+[2020-01-20 14:56:39,267: INFO/MainProcess] Events of group {task} enabled by remote.

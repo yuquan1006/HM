@@ -64,7 +64,7 @@ def project_hrun(name, base_url, project, receiver):
     report_path = add_test_reports(runner, report_name=name)
 
     if receiver != '':
-        send_email_reports(receiver, report_path)
+        send_email_reports(receiver, report_path, name=name)
     os.remove(report_path)
 
 
@@ -100,7 +100,7 @@ def module_hrun(name, base_url, module, receiver):
     report_path = add_test_reports(runner, report_name=name)
 
     if receiver != '':
-        send_email_reports(receiver, report_path)
+        send_email_reports(receiver, report_path, name=name)
     os.remove(report_path)
 
 
@@ -135,7 +135,23 @@ def suite_hrun(name, base_url, suite, receiver):
 
     runner.summary = timestamp_to_datetime(runner.summary)
     report_path = add_test_reports(runner, report_name=name)
+    print("--------------01")
+    if not runner.summary.get('success',None):
+        print('套件总测试结果为失败，进入预警邮件通知！')
+        FailName = []
+        for i in runner.summary.get('details'):
+            if i.get('success') == False:
+                FailName.append(i.get('name'))
+        print('收集的失败集合如下:',FailName)
+        # subjects = "定时任务出现错误情况预警通知"
+        status="【失败】"
+        bodyText = "{}定时任务执行错误用例如下：<br>&emsp; {} <br> 请套件相关维护人员及时确认！！！".format(name, '<br> &emsp;'.join(FailName))
+        send_email_reports(receiver,report_path,name=name,bodyText=bodyText,status=status)
+        os.remove(report_path)
+        return ""
+    else:
+        print('套件总测试结果为成功,正常邮件通知！')
 
     if receiver != '':
-        send_email_reports(receiver, report_path)
+        send_email_reports(receiver, report_path, name=name)
     os.remove(report_path)

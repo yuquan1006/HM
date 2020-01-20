@@ -63,7 +63,7 @@ Key Features
         CELERYD_MAX_TASKS_PER_CHILD = 100  # 每个worker执行了多少任务就会死掉，我建议数量可以大一些，默认100
     ```
 
-5. 命令行窗口执行pip install -r requirements.txt 安装工程所依赖的库文件
+5. 命令行窗口执行pip install -r requirements.txt 安装工程所依赖的库文件  # 安装mysqlclient失败：需要安装libmysqld-dev apt-get install libmysqld-dev 即可  # tornado库版本==5.1.1，不然会报错
 
 6. 命令行窗口切换到HttpRunnerManager目录 生成数据库迁移脚本,并生成表结构
     ```bash

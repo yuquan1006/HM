@@ -1,0 +1,46 @@
+-   config:
+        name: "\u573A\u666F-\u3010OpenApi\u3011\u521B\u5EFA\u4E00\u4E2A\u6279\u51C6\
+            \u7684\u51FA\u5DEE\u5355"
+        request:
+            base_url: https://openapi.ihr360.com
+        variables:
+        -   staffId: c305cb17-3bac-49d4-bd38-9162be679166
+        -   index: '0'
+        -   appID: 3890f74c-c03d-4db6-8c25-6496d468b23c
+        -   appSecret: ' 899d09f4-6257-4669-b150-a3663374ddb'
+        -   $auth: $get_base64($appID,$appSecret)
+-   test:
+        extract:
+        -   access_token: content.access_token
+        name: "\u5355\u63A5\u53E3-\u3010OpenApi\u3011-\u83B7\u53D6Access_token"
+        request:
+            headers:
+                Authorization: Basic $auth
+                Content-Type: application/json;charset=UTF-8
+            method: POST
+            url: /openapi/oauth/token?grant_type=client_credentials&scope=client
+        validate:
+        -   check: status_code
+            comparator: equals
+            expected: 200
+-   test:
+        name: "\u5355\u63A5\u53E3-\u3010\u8003\u52E4\u5047\u671F\u3011\u521B\u5EFA\
+            \u4E00\u4E2A\u6279\u51C6\u7684\u51FA\u5DEE\u5355"
+        request:
+            headers:
+                Authorization: Bearer $access_token
+            json:
+                address: "\u5317\u4EAC"
+                applyDate: '2019-10-19 15:21:01'
+                beginTime: 2019-10-28 09:00
+                bizId: ${get_timestamp()}
+                duration: 2
+                endTime: 2019-10-28 18:00
+                reason: "\u62DC\u8BBF\u5317\u4EAC\u5BA2\u6237"
+                staffId: $staffId
+            method: POST
+            url: /openapi/irenshi/attendance-api/attendance/travel/create
+        validate:
+        -   check: status_code
+            comparator: equals
+            expected: 200

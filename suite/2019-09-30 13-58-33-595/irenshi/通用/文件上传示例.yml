@@ -1,0 +1,56 @@
+-   config:
+        name: "\u6587\u4EF6\u4E0A\u4F20\u793A\u4F8B"
+        request:
+            base_url: https://www.ihr360.com
+        variables:
+        -   accountName: '18655660011'
+        -   password: '111111'
+-   test:
+        extract:
+        -   message: content.message
+        -   redirectUrl: content.redirectUrl
+        name: "\u5355\u63A5\u53E3-\u3010\u767B\u5F55\u3011-B\u7AEF\u767B\u5F55"
+        request:
+            json:
+                accountName: $accountName
+                loginType: PASSWORD
+                mobilePrefix: CHINA
+                password: $password
+                target: ''
+                verifyCode: null
+            method: POST
+            url: https://account.ihr360.com/ac/login
+        validate:
+        -   check: status_code
+            comparator: equals
+            expected: 200
+        -   check: $message
+            comparator: equals
+            expected: "\u8BA4\u8BC1\u767B\u5F55\u6210\u529F"
+        variables:
+        -   accountName_: '13339954178'
+        -   password_: '111111'
+-   test:
+        extract:
+        -   cookie_token: req_headers.cookie
+        name: "\u5355\u63A5\u53E3-\u3010\u767B\u5F55\u3011-B\u7AEF\u767B\u5F55\u6388\
+            \u6743"
+        request:
+            method: GET
+            url: $redirectUrl
+        validate:
+        -   check: status_code
+            comparator: equals
+            expected: 200
+-   test:
+        name: "\u6587\u4EF6\u4E0A\u4F20\u793A\u4F8B"
+        request:
+            data: $multipart_encoder
+            headers:
+                Content-Type: ${multipart_content_type($multipart_encoder)}
+                X-XSRF-TOKEN: ${getHeadersToken($cookie_token)}
+            method: POST
+            url: /gateway/cnb/aggregate/excel/upload?progressId=3646508186998467&moduleCode=ScheduleActual&extraParams=%7B%22startTime%22%3A%222019-9-01%22%2C%22endTime%22%3A%222019-9-30%22%7D
+        variables:
+        -   filePath: C:\Caesar\2.xls
+        -   multipart_encoder: ${multipart_encoder(file=$filePath)}

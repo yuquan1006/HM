@@ -1,0 +1,174 @@
+-   config:
+        name: "\u573A\u666F-\u7EC4\u7EC7\u67B6\u6784\u56FE"
+        request:
+            base_url: https://www.ihr360.com
+        variables:
+        -   accountName: '17612163057'
+        -   password: '111111'
+        -   randomData: ${gen_random_string()}
+-   test:
+        extract:
+        -   message: content.message
+        -   redirectUrl: content.redirectUrl
+        name: "\u5355\u63A5\u53E3-B\u7AEF\u767B\u5F55"
+        request:
+            json:
+                accountName: $accountName
+                loginType: PASSWORD
+                mobilePrefix: CHINA
+                password: $password
+                target: ''
+                verifyCode: null
+            method: POST
+            url: https://account.ihr360.com/ac/login
+        validate:
+        -   check: $message
+            comparator: equals
+            expected: "\u8BA4\u8BC1\u767B\u5F55\u6210\u529F"
+        variables:
+        -   accountName: '17612163057'
+        -   password: '111111'
+-   test:
+        extract:
+        -   cookie_token: req_headers.cookie
+        name: "\u5355\u63A5\u53E3-B\u7AEF\u767B\u5F55\u6388\u6743"
+        request:
+            method: GET
+            url: $redirectUrl
+        validate:
+        -   check: status_code
+            comparator: equals
+            expected: 200
+-   test:
+        extract:
+        -   parentId: content.children.0.children.0.id
+        -   departmentId: content.children.1.departmentId
+        -   departmentId3: content.children.0.children.0.departmentId
+        -   departmentName: content.children.0.children.0.text
+        name: "\u5355\u63A5\u53E3-\u83B7\u53D6\u7EC4\u7EC7\u67B6\u6784\u56FE"
+        request:
+            headers:
+                X-XSRF-TOKEN: ${getHeadersToken($cookie_token)}
+            method: GET
+            url: /web/organizationChart/getOrganizationTreeList.do
+-   test:
+        extract:
+        -   departmentId1: content.0.id
+        -   nodeId: content.0.nodeId
+        -   nodeName: content.0.nodeName
+        -   departmentId2: content.0.departmentId
+        name: "\u5355\u63A5\u53E3-\u3010\u7EC4\u7EC7\u67B6\u6784\u56FE\u3011\u589E\
+            \u52A0\u90E8\u95E8"
+        request:
+            headers:
+                X-XSRF-TOKEN: ${getHeadersToken($cookie_token)}
+            json:
+                organizationChartNodeType: DEPARTMENT
+                organizationPatchEntityList:
+                -   capacity: '10'
+                    nodeName: "IOS\u5F00\u53D1$randomData"
+                parentId: $parentId
+            method: POST
+            url: /web/organizationChart/addPatchOrganization.do
+        variables:
+        -   random: '26'
+-   test:
+        extract:
+        -   check: content
+        name: "\u5355\u63A5\u53E3-\u3010\u7EC4\u7EC7\u67B6\u6784\u56FE\u3011\u7F16\
+            \u8F91\u90E8\u95E8"
+        request:
+            headers:
+                X-XSRF-TOKEN: ${getHeadersToken($cookie_token)}
+            json:
+                chartEntity:
+                    capacity: $nodeId
+                    companySiteId: null
+                    companySiteName: null
+                    id: $departmentId
+                    isVirtual: false
+                    nodeId: '30'
+                    nodeName: $nodeName
+                    organizationChartNodeType: DEPARTMENT
+                    principalId: ''
+                    principalName: ''
+                positionIdBefore: null
+            method: POST
+            url: /web/organizationChart/updateOrganizationChart.do
+        validate:
+        -   check: $check
+            comparator: equals
+            expected: true
+-   test:
+        extract:
+        -   check: content
+        name: "\u5355\u63A5\u53E3-\u3010\u7EC4\u7EC7\u67B6\u6784\u56FE\u3011\u79FB\
+            \u52A8\u90E8\u95E8"
+        request:
+            headers:
+                X-XSRF-TOKEN: ${getHeadersToken($cookie_token)}
+            json:
+                sourceDepartmentId: $departmentId2
+                targetDepartmentId: $departmentId
+            method: POST
+            url: /web/companyStructure/moveDepartment.do
+        validate:
+        -   check: $check
+            comparator: equals
+            expected: true
+-   test:
+        extract:
+        -   check: content
+        name: "\u5355\u63A5\u53E3-\u3010\u81EA\u5236\u67B6\u6784\u56FE\u3011\u5408\
+            \u5E76\u90E8\u95E8"
+        request:
+            headers:
+                X-XSRF-TOKEN: ${getHeadersToken($cookie_token)}
+            json:
+                sourceDepartmentId: $departmentId2
+                targetDepartmentId: $departmentId3
+            method: POST
+            url: /web/companyStructure/mergeDepartment.do
+        validate:
+        -   check: $check
+            comparator: equals
+            expected: true
+-   test:
+        extract:
+        -   departmentId1: content.0.id
+        -   nodeId: content.0.nodeId
+        -   nodeName: content.0.nodeName
+        -   departmentId2: content.0.departmentId
+        name: "\u5355\u63A5\u53E3-\u3010\u7EC4\u7EC7\u67B6\u6784\u56FE\u3011\u589E\
+            \u52A0\u90E8\u95E8"
+        request:
+            headers:
+                X-XSRF-TOKEN: ${getHeadersToken($cookie_token)}
+            json:
+                organizationChartNodeType: DEPARTMENT
+                organizationPatchEntityList:
+                -   capacity: '10'
+                    nodeName: "IOS\u5F00\u53D1$randomData"
+                parentId: $parentId
+            method: POST
+            url: /web/organizationChart/addPatchOrganization.do
+        variables:
+        -   random: '26'
+-   test:
+        extract:
+        -   check: content
+        name: "\u5355\u63A5\u53E3-\u3010\u7EC4\u7EC7\u67B6\u6784\u56FE\u3011\u5220\
+            \u9664\u90E8\u95E8"
+        request:
+            headers:
+                X-XSRF-TOKEN: ${getHeadersToken($cookie_token)}
+            json:
+                id: $departmentId1
+                nodeId: '33'
+                organizationChartNodeType: DEPARTMENT
+            method: POST
+            url: /web/organizationChart/deleteCompanyStructure.do
+        validate:
+        -   check: $check
+            comparator: equals
+            expected: true

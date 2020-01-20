@@ -1,0 +1,75 @@
+2020-01-20 14:56:44,561 [django.server:124] [basehttp:log_message] [INFO]- "GET /api/login/ HTTP/1.1" 200 3876
+2020-01-20 14:56:46,435 [HttpRunnerManager:55] [views:login] [INFO]- york 登录成功
+2020-01-20 14:56:46,442 [django.server:124] [basehttp:log_message] [INFO]- "POST /api/login/ HTTP/1.1" 302 0
+2020-01-20 14:56:46,519 [django.server:124] [basehttp:log_message] [INFO]- "GET /api/index/ HTTP/1.1" 200 18685
+2020-01-20 14:57:03,885 [django.server:124] [basehttp:log_message] [INFO]- "GET /api/login/ HTTP/1.1" 200 3876
+2020-01-20 14:57:03,944 [django.server:124] [basehttp:log_message] [INFO]- "GET /static/assets/iconfont/style.css HTTP/1.1" 200 1638
+2020-01-20 14:57:03,948 [django.server:124] [basehttp:log_message] [INFO]- "GET /static/assets/img/main_bg.png HTTP/1.1" 200 2801
+2020-01-20 14:57:03,950 [django.server:124] [basehttp:log_message] [INFO]- "GET /static/assets/img/bg.jpg HTTP/1.1" 200 135990
+2020-01-20 14:57:05,423 [django.server:124] [basehttp:log_message] [INFO]- "GET /static/assets/iconfont/fonts/icomoon.ttf?u4m6fy HTTP/1.1" 200 6900
+2020-01-20 14:57:06,618 [HttpRunnerManager:89] [views:log_out] [INFO]- york退出
+2020-01-20 14:57:06,622 [django.server:124] [basehttp:log_message] [INFO]- "GET /api/log_out/ HTTP/1.1" 302 0
+2020-01-20 14:57:06,631 [django.server:124] [basehttp:log_message] [INFO]- "GET /api/login/ HTTP/1.1" 200 3876
+2020-01-20 14:57:14,050 [HttpRunnerManager:55] [views:login] [INFO]- york 登录成功
+2020-01-20 14:57:14,056 [django.server:124] [basehttp:log_message] [INFO]- "POST /api/login/ HTTP/1.1" 302 0
+2020-01-20 14:57:14,129 [django.server:124] [basehttp:log_message] [INFO]- "GET /api/index/ HTTP/1.1" 200 18685
+2020-01-20 14:58:13,860 [HttpRunnerManager:163] [operation:add_case_data] [INFO]- 单接口-【薪资档案】获取薪资项调整原因选项用例更新成功: {'test': {'request': {'url': '/gateway/payroll/api/enum/salaryProfileChangeType.json', 'headers': {'Content-Type': 'application/json;charset=UTF-8', 'X-XSRF-TOKEN': '${getHeadersToken($cookie_token)}'}, 'method': 'GET'}, 'validate': [{'comparator': 'equals', 'expected': 200, 'check': 'status_code'}, {'comparator': 'equals', 'expected': 7, 'check': '$option_length'}], 'extract': [{'option_length': 'content.data.content.length'}], 'name': '单接口-【薪资档案】获取薪资项调整原因选项'}}
+INFO:HttpRunnerManager:单接口-【薪资档案】获取薪资项调整原因选项用例更新成功: {'test': {'request': {'url': '/gateway/payroll/api/enum/salaryProfileChangeType.json', 'headers': {'Content-Type': 'application/json;charset=UTF-8', 'X-XSRF-TOKEN': '${getHeadersToken($cookie_token)}'}, 'method': 'GET'}, 'validate': [{'comparator': 'equals', 'expected': 200, 'check': 'status_code'}, {'comparator': 'equals', 'expected': 7, 'check': '$option_length'}], 'extract': [{'option_length': 'content.data.content.length'}], 'name': '单接口-【薪资档案】获取薪资项调整原因选项'}}
+2020-01-20 14:58:13,862 [django.server:124] [basehttp:log_message] [INFO]- "POST /api/edit_case/ HTTP/1.1" 200 17
+INFO:django.server:"POST /api/edit_case/ HTTP/1.1" 200 17
+2020-01-20 14:58:14,028 [django.server:124] [basehttp:log_message] [INFO]- "GET /api/test_list/1/ HTTP/1.1" 200 71046
+INFO:django.server:"GET /api/test_list/1/ HTTP/1.1" 200 71046
+2020-01-20 14:58:14,293 [django.server:124] [basehttp:log_message] [INFO]- "POST /api/add_case/ HTTP/1.1" 200 118
+INFO:django.server:"POST /api/add_case/ HTTP/1.1" 200 118
+2020-01-20 14:59:08,430 [django.server:124] [basehttp:log_message] [INFO]- "GET /api/test_list/2/ HTTP/1.1" 200 34957
+INFO:django.server:"GET /api/test_list/2/ HTTP/1.1" 200 34957
+2020-01-20 14:59:08,620 [django.server:124] [basehttp:log_message] [INFO]- "POST /api/add_case/ HTTP/1.1" 200 118
+INFO:django.server:"POST /api/add_case/ HTTP/1.1" 200 118
+2020-01-20 14:59:11,658 [django.server:124] [basehttp:log_message] [INFO]- "GET /api/edit_case/527/ HTTP/1.1" 200 52345
+INFO:django.server:"GET /api/edit_case/527/ HTTP/1.1" 200 52345
+2020-01-20 14:59:38,789 [django.server:124] [basehttp:log_message] [INFO]- "POST /api/add_case/ HTTP/1.1" 200 118
+INFO:django.server:"POST /api/add_case/ HTTP/1.1" 200 118
+2020-01-20 14:59:43,341 [django.server:124] [basehttp:log_message] [INFO]- "POST /api/test_list/1/ HTTP/1.1" 200 71046
+INFO:django.server:"POST /api/test_list/1/ HTTP/1.1" 200 71046
+2020-01-20 14:59:43,557 [django.server:124] [basehttp:log_message] [INFO]- "POST /api/add_case/ HTTP/1.1" 200 118
+INFO:django.server:"POST /api/add_case/ HTTP/1.1" 200 118
+2020-01-20 14:59:56,237 [django.server:124] [basehttp:log_message] [INFO]- "GET /api/test_list/2/ HTTP/1.1" 200 34957
+INFO:django.server:"GET /api/test_list/2/ HTTP/1.1" 200 34957
+2020-01-20 14:59:56,431 [django.server:124] [basehttp:log_message] [INFO]- "POST /api/add_case/ HTTP/1.1" 200 118
+INFO:django.server:"POST /api/add_case/ HTTP/1.1" 200 118
+2020-01-20 15:00:02,185 [django.server:124] [basehttp:log_message] [INFO]- "GET /api/edit_case/521/ HTTP/1.1" 200 52648
+INFO:django.server:"GET /api/edit_case/521/ HTTP/1.1" 200 52648
+2020-01-20 15:00:02,550 [django.server:124] [basehttp:log_message] [INFO]- "GET /api/index/ HTTP/1.1" 200 19032
+INFO:django.server:"GET /api/index/ HTTP/1.1" 200 19032
+2020-01-20 15:00:02,611 [django.server:124] [basehttp:log_message] [INFO]- "GET /static/assets/css/admin.css HTTP/1.1" 200 19660
+INFO:django.server:"GET /static/assets/css/admin.css HTTP/1.1" 200 19660
+2020-01-20 15:00:02,613 [django.server:124] [basehttp:log_message] [INFO]- "GET /static/assets/css/common.css HTTP/1.1" 200 1004
+INFO:django.server:"GET /static/assets/css/common.css HTTP/1.1" 200 1004
+2020-01-20 15:00:02,645 [django.server:124] [basehttp:log_message] [INFO]- "GET /static/assets/js/commons.js HTTP/1.1" 200 13209
+INFO:django.server:"GET /static/assets/js/commons.js HTTP/1.1" 200 13209
+2020-01-20 15:00:02,648 [django.server:124] [basehttp:log_message] [INFO]- "GET /static/assets/js/app.js HTTP/1.1" 200 20844
+INFO:django.server:"GET /static/assets/js/app.js HTTP/1.1" 200 20844
+2020-01-20 15:00:06,018 [django.server:124] [basehttp:log_message] [INFO]- "GET /favicon.ico HTTP/1.1" 302 0
+INFO:django.server:"GET /favicon.ico HTTP/1.1" 302 0
+2020-01-20 15:00:33,232 [HttpRunnerManager:89] [views:log_out] [INFO]- york退出
+INFO:HttpRunnerManager:york退出
+2020-01-20 15:00:33,236 [django.server:124] [basehttp:log_message] [INFO]- "GET /api/log_out/ HTTP/1.1" 302 0
+INFO:django.server:"GET /api/log_out/ HTTP/1.1" 302 0
+2020-01-20 15:00:33,270 [django.server:124] [basehttp:log_message] [INFO]- "GET /api/login/ HTTP/1.1" 200 3876
+INFO:django.server:"GET /api/login/ HTTP/1.1" 200 3876
+2020-01-20 15:01:23,217 [django.server:124] [basehttp:log_message] [INFO]- "POST /api/add_case/ HTTP/1.1" 200 118
+INFO:django.server:"POST /api/add_case/ HTTP/1.1" 200 118
+2020-01-20 15:01:25,859 [django.server:124] [basehttp:log_message] [INFO]- "GET /api/edit_case/521/ HTTP/1.1" 200 52648
+INFO:django.server:"GET /api/edit_case/521/ HTTP/1.1" 200 52648
+2020-01-20 15:02:22,689 [django.server:124] [basehttp:log_message] [INFO]- "GET /api/edit_case/521/ HTTP/1.1" 200 52648
+INFO:django.server:"GET /api/edit_case/521/ HTTP/1.1" 200 52648
+2020-01-20 15:02:26,113 [django.server:124] [basehttp:log_message] [INFO]- "GET /api/debugtalk_list/1/ HTTP/1.1" 200 19381
+INFO:django.server:"GET /api/debugtalk_list/1/ HTTP/1.1" 200 19381
+2020-01-20 15:02:29,883 [django.server:124] [basehttp:log_message] [INFO]- "GET /api/debugtalk/7/ HTTP/1.1" 200 4006
+INFO:django.server:"GET /api/debugtalk/7/ HTTP/1.1" 200 4006
+2020-01-20 15:02:42,387 [django.server:124] [basehttp:log_message] [INFO]- "GET /api/debugtalk_list/1/ HTTP/1.1" 200 19381
+INFO:django.server:"GET /api/debugtalk_list/1/ HTTP/1.1" 200 19381
+2020-01-20 15:02:44,178 [django.server:124] [basehttp:log_message] [INFO]- "GET /api/debugtalk/4/ HTTP/1.1" 200 8123
+INFO:django.server:"GET /api/debugtalk/4/ HTTP/1.1" 200 8123
+2020-01-20 15:05:48,568 [django.server:124] [basehttp:log_message] [INFO]- "GET /api/login/ HTTP/1.1" 200 3876
+INFO:django.server:"GET /api/login/ HTTP/1.1" 200 3876

@@ -1,4 +1,5 @@
 from django.utils.safestring import mark_safe
+from django.db.models import Q # filter中不等于写法
 
 from ApiManager.models import ModuleInfo, TestCaseInfo, TestSuite
 
@@ -194,3 +195,24 @@ def get_pager_info(Model, filter_query, url, id, per_items=12):
         page_list = customer_pager(url, id, page_info.total_page)
 
     return page_list, info, sum
+
+def get_referenced_idList(Model):
+    """
+    获取用例中被引用用例id
+    :param Model: Models实体类
+    :param filter_query: dict: 筛选条件
+    :return:list
+    """
+    test_referenced = Model.objects.filter(~Q(include='[]'), type=1)  # 查看类型为用例且关联不为空的用例
+    referenced_idSet = set()
+    for i in test_referenced:
+        referenced_list = eval(i.include)
+        for j in referenced_list:
+            # print(j)
+            if isinstance(j, list) and len(j) > 0:
+                # print("yes")
+                referenced_idSet.add(j[0])
+                # print(j[0])
+    #print("集合：", referenced_idSet)
+    referenced_idList = list(referenced_idSet)
+    return referenced_idList

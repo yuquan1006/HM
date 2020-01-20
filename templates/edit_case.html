@@ -420,9 +420,9 @@
                         <form id="form_request_data">
                             {% if 'json' in request.request.keys %}
                                 <span style="font-size:10px;" id="json-text">
-                                   <div style="margin-left: 0px; margin-top: 5px; height: 200px">
+                                   <div style="margin-left: 0px; margin-top: 5px; height:400px">
                                        <pre id="code" class="ace_editor"
-                                            style="margin-top: 0px; margin-bottom: 0px; min-height: 200px;">
+                                            style="margin-top: 0px; margin-bottom: 0px; min-height: 400px;">
 <textarea style="left: 0px">
 {{ request.request.json|json_dumps }}
 </textarea>
@@ -762,8 +762,8 @@
                 $('#del_data').attr('disabled', true);
                 $('#data').remove();
                 var json_text = "<span style=\"font-size:10px;\" id=\"json-text\">\n" +
-                    " <div style=\"margin-left: 0px; margin-top: 5px; height: 200px\">" +
-                    "<pre id=\"code\" class=\"ace_editor\" style=\"margin-top: 0px; margin-bottom: 0px; min-height: 200px;\">\n" +
+                    " <div style=\"margin-left: 0px; margin-top: 5px; height: 400px\">" +
+                    "<pre id=\"code\" class=\"ace_editor\" style=\"margin-top: 0px; margin-bottom: 0px; min-height: 400px;\">\n" +
                     "<textarea>\n" +
                     "{\"key\":\"value\"}\n" +
                     "</textarea>\n" +
